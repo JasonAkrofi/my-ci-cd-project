@@ -47,4 +47,9 @@ jobs:
 
     - name: Update ECS Service with new Docker image
       run: |
+ HEAD
         aws ecs update-service --cluster my-aws-cluster --service my-service --force-new-deployment --image jason2706/my-app:${{ github.sha }}
+
+        aws ecs update-service --cluster my-aws-cluster --service my-service --force-new-deployment
+--image jason2706/my-app:${{ github.sha }}
+ 2ba9441 (Update ECS service with new Docker image)
