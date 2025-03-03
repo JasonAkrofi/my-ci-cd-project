@@ -47,13 +47,13 @@ jobs:
     - name: Update ECS Task Definition
       run: |
         aws ecs register-task-definition \
-          --family my-task-family \
+          --family my-task-definition \
           --container-definitions "[{\"name\":\"my-container\",\"image\":\"jason2706/my-app:${{ github.sha }}\",\"essential\":true}]"
 
     - name: Update ECS Service with new Task Definition
       run: |
         aws ecs update-service \
           --cluster my-aws-cluster \
-          --service my-service \
+          --service my-aws-service \
           --task-definition my-task-family:${{ github.sha }} \
           --force-new-deployment
