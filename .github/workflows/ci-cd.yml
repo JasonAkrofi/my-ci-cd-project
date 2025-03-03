@@ -26,7 +26,6 @@ jobs:
 
     - name: Push Docker image to Docker Hub
       run: |
-
         docker push jason2706/my-app:${{ github.sha }}
         docker push jason2706/my-app:latest
 
@@ -45,11 +44,16 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: us-west-2  # Change to your AWS region
 
-    - name: Update ECS Service with new Docker image
+    - name: Update ECS Task Definition
       run: |
- HEAD
-        aws ecs update-service --cluster my-aws-cluster --service my-service --force-new-deployment --image jason2706/my-app:${{ github.sha }}
+        aws ecs register-task-definition \
+          --family my-task-family \
+          --container-definitions "[{\"name\":\"my-container\",\"image\":\"jason2706/my-app:${{ github.sha }}\",\"essential\":true}]"
 
-        aws ecs update-service --cluster my-aws-cluster --service my-service --force-new-deployment
---image jason2706/my-app:${{ github.sha }}
- 2ba9441 (Update ECS service with new Docker image)
+    - name: Update ECS Service with new Task Definition
+      run: |
+        aws ecs update-service \
+          --cluster my-aws-cluster \
+          --service my-service \
+          --task-definition my-task-family:${{ github.sha }} \
+          --force-new-deployment
