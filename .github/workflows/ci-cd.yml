@@ -26,13 +26,11 @@ jobs:
 
     - name: Push Docker image to Docker Hub
       run: |
- HEAD
+
         docker push jason2706/my-app:${{ github.sha }}
         docker push jason2706/my-app:latest
 
-        docker push myusername/my-app:${{ github.sha }}
-        docker push myusername/my-app:latest
-    deploy:
+  deploy:
     needs: build  # This job runs after the build job is completed
     runs-on: ubuntu-latest
 
