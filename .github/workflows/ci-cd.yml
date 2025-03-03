@@ -32,7 +32,7 @@ jobs:
 
         docker push myusername/my-app:${{ github.sha }}
         docker push myusername/my-app:latest
-  deploy:
+    deploy:
     needs: build  # This job runs after the build job is completed
     runs-on: ubuntu-latest
 
