@@ -44,16 +44,16 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: us-west-2  # Change to your AWS region
 
-    - name: Update ECS Task Definition
+    - name: Get latest task definition revision
+      id: get-revision
       run: |
-        aws ecs register-task-definition \
-          --family my-task-definition \
-          --container-definitions "[{\"name\":\"my-container\",\"image\":\"jason2706/my-app:${{ github.sha }}\",\"essential\":true,\"memory\":512}]"
+        revision=$(aws ecs describe-task-definition --task-definition my-task-family | jq -r '.taskDefinition.revision')
+        echo "::set-output name=revision::$revision"
 
     - name: Update ECS Service with new Task Definition
       run: |
         aws ecs update-service \
-          --cluster my-aws-cluster \
-          --service my-aws-service \
-          --task-definition my-task-family:${{ github.sha }} \
-          --force-new-deployment
+        --cluster my-aws-cluster \
+        --service my-aws-service \
+        --task-definition my-task-family:${{ steps.get-revision.outputs.revision }} \
+        --force-new-deployment
