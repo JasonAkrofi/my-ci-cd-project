@@ -26,5 +26,28 @@ jobs:
 
     - name: Push Docker image to Docker Hub
       run: |
+ HEAD
         docker push jason2706/my-app:${{ github.sha }}
         docker push jason2706/my-app:latest
+
+        docker push myusername/my-app:${{ github.sha }}
+        docker push myusername/my-app:latest
+  deploy:
+    needs: build  # This job runs after the build job is completed
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-west-2  # Change to your AWS region
+
+    - name: Update ECS Service with new Docker image
+      run: |
+        aws ecs update-service --cluster my-cluster --service my-service --force-new-deployment
+ 493b6a8 (Added AWS deployment step)
