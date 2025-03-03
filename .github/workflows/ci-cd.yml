@@ -48,4 +48,3 @@ jobs:
     - name: Update ECS Service with new Docker image
       run: |
         aws ecs update-service --cluster my-cluster --service my-service --force-new-deployment
- 493b6a8 (Added AWS deployment step)
