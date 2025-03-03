@@ -48,7 +48,7 @@ jobs:
       run: |
         aws ecs register-task-definition \
           --family my-task-definition \
-          --container-definitions "[{\"name\":\"my-container\",\"image\":\"jason2706/my-app:${{ github.sha }}\",\"essential\":true}]"
+          --container-definitions "[{\"name\":\"my-container\",\"image\":\"jason2706/my-app:${{ github.sha }}\",\"essential\":true,\"memory\":512}]"
 
     - name: Update ECS Service with new Task Definition
       run: |
